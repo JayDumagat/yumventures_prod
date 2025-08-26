@@ -75,6 +75,35 @@ const useCategoryStore = create((set, get) => ({
     }
   },
 
+  appendCategory: (category) => {
+    set((state) => ({
+      categories: [...state.categories, category]
+    }));
+  },
+
+  replaceCategory: (updatedCategory) => {
+    set((state) => ({
+      categories: state.categories.map((cat) =>
+          cat.id === updatedCategory.id ? updatedCategory : cat
+      )
+    }));
+  },
+
+  removeCategoryFromState: (id) => {
+    const categoryId = typeof id === 'string' ? parseInt(id) : id;
+
+    set((state) => {
+      const filteredCategories = state.categories.filter((cat) => {
+        const catId = typeof cat.id === 'string' ? parseInt(cat.id) : cat.id;
+        return catId !== categoryId;
+      });
+
+      return {
+        categories: filteredCategories
+      };
+    });
+  }
+
   
 }))
 

@@ -1,14 +1,16 @@
-const {login, register, findUserByEmail, saveVerificationCode, isVerificationCodeValid, changeUserPassword} = require('../services/authService');
-const sendVerficationCode = require('../services/emailService');
+const {login, register, findUserByEmail, saveVerificationCode, isVerificationCodeValid, changeUserPassword, updateUser} = require('../services/authService');
+const sendVerificationCode = require('../services/emailService');
 
 
 const loginWithUsername = async (req, res) => {
     const {username, password, rememberMe} = req.body;
+    console.log('Login attempt with username:', username);
     try {
         const user = await login(username, password);
         if (!user) {
             return res.status(401).json({message: 'Invalid credentials. Please try again.'});
         }
+
 
         req.session.user = {
             id: user.id,
@@ -16,6 +18,7 @@ const loginWithUsername = async (req, res) => {
             lastName: user.lastName,
             email: user.email,
             role: user.role,
+            profileImage: user.profileImage,
         }
 
         if (rememberMe) {
@@ -59,15 +62,17 @@ const logoutUser = (req, res) => {
 
 const getSession = (req, res) => {
 
-    const { id, firstName, username, email, role } = req.user;
+    const { id, firstName, lastName, username, email, role, profileImage } = req.user;
 
     return res.status(200).json({
         user: {
             id,
             firstName,
+            lastName,
             username,
             email,
-            role
+            role,
+            profileImage
         },
         timestamp: new Date().toISOString()
     });
@@ -81,11 +86,11 @@ const getEmailCode = async (req, res) => {
             return res.status(404).json({ message: 'User not found' });
         }
 
-        const verificationCode = await sendVerficationCode(email);
+        const verificationCode = await sendVerificationCode(email);
         
         const validUntil = new Date(Date.now() + 5 * 60 * 1000); 
 
-        saveVerificationCode(user.id, verificationCode, validUntil);
+        await saveVerificationCode(user.id, verificationCode, validUntil);
 
         return res.status(200).json({ message: 'Verification code sent' });
     } catch (error) {
@@ -123,6 +128,44 @@ const resetUserPassword = async (req, res) => {
     }
 }
 
+const updateUserProfile = async (req, res) => {
+    try {
+        // Handle case where req.body might be undefined or empty
+        const newPassword = req.body?.newPassword || null;
+        const { id } = req.user; // This comes from authMiddleware
+
+
+        const updatedUserProfile = await updateUser(id, newPassword, req.file);
+
+        if(updatedUserProfile) {
+            const sanitizedProfile = {
+                id: updatedUserProfile.id,
+                firstName: updatedUserProfile.firstName,
+                lastName: updatedUserProfile.lastName,
+                email: updatedUserProfile.email,
+                username: updatedUserProfile.username,
+                role: updatedUserProfile.role,
+                profileImage: updatedUserProfile.profileImage,
+            }
+
+            req.session.user = sanitizedProfile;
+
+            return res.status(200).json({
+                message: 'User profile updated successfully',
+                user: sanitizedProfile
+            });
+        }
+        return res.status(500).json({
+            message: 'Failed to update user profile'
+        });
+    } catch (error) {
+        console.error('Error updating user profile:', error);
+        return res.status(500).json({
+            message: error.message || 'Failed to update user profile'
+        });
+    }
+}
+
 
 
 module.exports = {
@@ -132,5 +175,6 @@ module.exports = {
     getSession,
     getEmailCode,
     validateVerificationCode,
-    resetUserPassword
+    resetUserPassword,
+    updateUserProfile,
 }

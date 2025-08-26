@@ -30,17 +30,25 @@ export default function ClientLogin({redirectTo}) {
     onSubmit: async (values, { setSubmitting }) => {
       try {
         setSubmitting(true);
-        const isLoggedIn = await login(values);
-        if (isLoggedIn) {
-          toast.success("Login successful!");
-          setTimeout(() => {
-            navigate(redirectTo);
-          }, 2000);
+
+        const user = await login(values); // user or null
+        if (user) {
+          if (user.user.role === "owner" || user.user.role === "cashier") {
+            toast.success("Login successful!");
+            setTimeout(() => {
+              navigate(redirectTo);
+            }, 2000);
+          } else {
+            toast.error("Access denied. You are not authorized.");
+          }
         } else {
-          toast.error("Invalid username or password");
+          toast.error("Invalid credentials, please try again.");
         }
       } catch (error) {
-        toast.error("An error occurred during login", error.message);
+        console.error(error);
+        toast.error("An error occurred during login");
+      } finally {
+        setSubmitting(false);
       }
     },
   });

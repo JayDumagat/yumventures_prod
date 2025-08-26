@@ -38,7 +38,13 @@ export default function SidebarFooter() {
             className="w-full inline-flex shrink-0 items-center gap-x-2 p-2 text-start text-sm text-gray-800 rounded-md hover:bg-gray-100 focus:outline-hidden focus:bg-gray-100 dark:text-neutral-200 dark:hover:bg-neutral-700 dark:focus:bg-neutral-700"
             onClick={toggleDropdown}
           >
-            <div className="shrink-0 w-10 h-10 rounded-full bg-gray-200 dark:bg-neutral-700"></div>
+            <div>
+              <img src={
+                user?.profileImage
+                    ? `${import.meta.env.VITE_API_URL}${user.profileImage}`
+                    : "https://preline.co/assets/img/160x160/img1.jpg"
+              } alt="Profile" className="shrink-0 w-10 h-10 rounded-full"/>
+            </div>
             {user?.firstName} {user?.lastName}
             <svg
               className="shrink-0 size-3.5 ms-auto"
@@ -65,7 +71,7 @@ export default function SidebarFooter() {
               <div className="p-1">
                 <Link
                   className="flex items-center gap-x-3 py-2 px-3 rounded-lg text-sm text-gray-800 hover:bg-gray-100 disabled:opacity-50 disabled:pointer-events-none focus:outline-hidden focus:bg-gray-100 dark:text-neutral-300 dark:hover:bg-neutral-800 dark:focus:bg-neutral-800"
-                  to={`/profile/${user?.id}`}
+                  to="/profile"
                 >
                   Profile
                 </Link>

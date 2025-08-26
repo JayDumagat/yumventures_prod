@@ -4,6 +4,8 @@ import "./App.css";
 import { ToastContainer } from "react-toastify";
 import Unauthorized from "./components/Unauthorized";
 import SuccessPage from "./pages/SuccessPage";
+import CustomerLogin from "./pages/CustomerLogin.jsx";
+import Profile from "./pages/Profile.jsx";
 
 
 const Landing = lazy(() => import("./pages/Landing"));
@@ -152,6 +154,25 @@ function App() {
             }
           />
 
+            <Route path="/profile" element={
+                <Suspense fallback={<div>Loading...</div>}>
+                    <ProtectedRoute routeTo={"/login"} rolesAllowed={["everyone"]}>
+                        <Profile />
+                    </ProtectedRoute>
+                </Suspense>
+            } />
+
+            <Route
+                path="/orders"
+                element={
+                    <Suspense fallback={<div>Loading...</div>}>
+                        <ProtectedRoute routeTo={"/login"} rolesAllowed={["everyone"]}>
+                            <Order />
+                        </ProtectedRoute>
+                    </Suspense>
+                }
+            />
+
           <Route
             path="/orders"
             element={
@@ -167,7 +188,7 @@ function App() {
             path="/login"
             element={
               <Suspense fallback={<div>Loading...</div>}>
-                <ClientLogin redirectTo={"/"} />
+                <CustomerLogin redirectTo={"/"} />
               </Suspense>
             }
           />
@@ -194,6 +215,7 @@ function App() {
 
           <Route path="/unauthorized" element={<Unauthorized/>} />
           <Route path="/success" element={<SuccessPage />} />
+            <Route path="/profile/{id}" element={<Profile />} />
         </Routes>
       </Router>
     </>

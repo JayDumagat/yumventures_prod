@@ -1,23 +1,28 @@
-import { create } from "zustand";
-import { persist } from "zustand/middleware";
+import {create} from "zustand";
+import {persist} from "zustand/middleware";
 import axiosClient from "../api/axiosClient";
-import { toast } from "react-toastify";
+import {toast} from "react-toastify";
 
 const useAuthStore = create(
   persist(
     (set) => ({
       user: undefined,
 
-      login: async (values) => {
-        try {
-          const response = await axiosClient.post("/api/auth/login", values);
-          set({ user: response.data.user });
-          return true;
-        } catch {
-          console.error("Login failed");
-          return false;
-        }
-      },
+        login: async (values) => {
+            try {
+                const response = await axiosClient.post("/api/auth/login", values);
+
+                if (response.data && response.data.user) {
+                    set({ user: response.data.user }); // Store full user object
+                    return { success: true, user: response.data.user }; // Return user data for extra logic
+                }
+
+                return { success: false, error: "Invalid response from server" };
+            } catch (error) {
+                console.error("Login failed:", error.response?.data || error.message);
+                return { success: false, error: error.response?.data?.message || "Login failed" };
+            }
+        },
 
       register: async (values) => {
         try {
@@ -48,6 +53,36 @@ const useAuthStore = create(
           console.error('Logout failed:', err);
         }
       },
+
+        updateProfile: async (formData) => {
+            try {
+                console.log('=== AUTH STORE DEBUG ===');
+                console.log('Sending FormData to server...');
+
+                // Debug FormData (same as your menu item debugging)
+                for (let [key, value] of formData.entries()) {
+                    if (value instanceof File) {
+                        console.log(`FormData ${key}: FILE - ${value.name} (${value.type}, ${value.size} bytes)`);
+                    } else {
+                        console.log(`FormData ${key}: ${value}`);
+                    }
+                }
+                console.log('=== END AUTH STORE DEBUG ===');
+
+                // ADD the same headers as your working menu item store
+                const response = await axiosClient.put("/api/auth/profile", formData, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data',
+                    },
+                });
+
+                set({ user: response.data.user });
+                return true;
+            } catch (error) {
+                console.error("Profile update failed:", error.response?.data || error);
+                throw error;
+            }
+        },
 
       sendEmail: async (email) => {
         try {

@@ -85,6 +85,10 @@ module.exports = (sequelize, DataTypes) => {
         isIn: [['owner', 'cashier', 'customer']]
       }
     },
+    profileImage: {
+        type: DataTypes.STRING(255),
+        allowNull: true,
+    },
     deletedAt: {
       type: DataTypes.DATE,
       allowNull: true,

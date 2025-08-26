@@ -28,7 +28,7 @@ const requestPaymentLink = async (req, res) => {
                 const menuItem = await findMenuItemById(item.menuItemId);
                 return {
                     name: menuItem.name,
-                    amount: parseFloat(item.price) * 100, // convert to cents
+                    amount: 100, // convert to cents parseFloat(item.price) * 100
                     currency: "PHP",
                     quantity: item.quantity
                 };

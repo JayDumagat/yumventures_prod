@@ -60,6 +60,10 @@ module.exports = {
           isIn: [['owner', 'cashier', 'customer']]
         }
       },
+      profileImage: {
+        type: Sequelize.STRING(255),
+        allowNull: true,
+      },
       deletedAt: {
         type: Sequelize.DATE,
         allowNull: true,

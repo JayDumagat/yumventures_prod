@@ -87,12 +87,10 @@ export default function ViewMenuItem({ menuItem, deleteDialog, closeDialog }) {
                     className="inline-block size-16 rounded-lg ring-2 ring-white dark:ring-neutral-900"
                     src={
                       imagePreview
-                        ? imagePreview
-                        : `${import.meta.env.VITE_API_URL}${
-                            menuItem.image.startsWith("/")
+                          ? imagePreview
+                          : menuItem.image?.startsWith("http")
                               ? menuItem.image
-                              : `/${menuItem.image}`
-                          }`
+                              : `${import.meta.env.VITE_API_URL}${menuItem.image || ""}`
                     }
                     alt={`${menuItem.name} image`}
                   />

@@ -2,7 +2,7 @@ const axios = require("axios");
 const base64 = require("base-64");
 require("dotenv").config();
 
-const PK = process.env.PAYMONGO_SECRET_KEY;
+const PK = "test key here";
 const FE = process.env.FRONTEND_URL;
 
 async function createCheckoutSession(line_items, metadata) {
@@ -16,7 +16,7 @@ async function createCheckoutSession(line_items, metadata) {
   console.log(JSON.stringify({
     data: {
       attributes: {
-        payment_method_types: ["card", "gcash", "paymaya"],
+        payment_method_types: ["card", "gcash", "paymaya", "qrph"],
         line_items: formattedLineItems,
         metadata,
         // FIXED: The correct placeholder format is {CHECKOUT_SESSION_ID} not {{CHECKOUT_SESSION_ID}}
@@ -31,7 +31,7 @@ async function createCheckoutSession(line_items, metadata) {
     {
       data: {
         attributes: {
-          payment_method_types: ["card", "gcash", "paymaya"],
+          payment_method_types: ["card", "gcash", "paymaya", "qrph"],
           line_items: formattedLineItems,
           metadata,
           // FIXED: The correct placeholder format is {CHECKOUT_SESSION_ID} not {{CHECKOUT_SESSION_ID}}

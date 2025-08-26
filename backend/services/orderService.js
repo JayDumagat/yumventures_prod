@@ -1,4 +1,5 @@
 const { Order, OrderItem, MenuItem, sequelize } = require("../models");
+const { getIO } = require("../utils/socket");
 
 const insertOrder = async (
   total,
@@ -20,6 +21,25 @@ const insertOrder = async (
       },
       { transaction }
     );
+
+      const orderWithDetails = await Order.findByPk(order.id, {
+          include: [
+              {
+                  model: OrderItem,
+                  as: "orderItems",
+                  required: false,
+                  include: [
+                      {
+                          model: MenuItem,
+                          as: "menuItem",
+                          attributes: ["id", "name", "image"],
+                      },
+                  ],
+              },
+          ],
+      });
+
+      getIO().emit("orderAdded", orderWithDetails);
 
     await transaction.commit();
     return order;
@@ -118,6 +138,10 @@ const changeOrderStatus = async (orderId, status) => {
     await order.save({ transaction });
 
     await transaction.commit();
+
+    const updatedOrder = await findOrderById(orderId);
+
+    getIO().emit("orderStatusUpdated", updatedOrder);
     return order;
   } catch (error) {
     await transaction.rollback();

@@ -1,9 +1,9 @@
 {
   "development": {
-    "username": "root",
-    "password": null,
-    "database": "cp2_yum",
-    "host": "127.0.0.1",
+    "username": "myuser",
+    "password": "mypassword",
+    "database": "mydb",
+    "host": "mysql",
     "dialect": "mysql"
   },
   "test": {

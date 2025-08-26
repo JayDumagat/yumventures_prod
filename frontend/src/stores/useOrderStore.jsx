@@ -38,6 +38,11 @@ const useOrderStore = create((set, get) => ({
         }
     },
 
+    appendOrder: (order) => set((state) => ({ orders: [order, ...state.orders] })),
+    replaceOrder: (updatedOrder) => set((state) => ({
+        orders: state.orders.map(order => order.id === updatedOrder.id ? updatedOrder : order)
+    }))
+
     
 }));
 

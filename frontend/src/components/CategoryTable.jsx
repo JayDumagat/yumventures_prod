@@ -9,9 +9,11 @@ import TableFooter from "./TableFooter";
 import ViewCategory from "./ViewCategory";
 import DeleteConfirmation from "./DeleteConfirmation";
 import useFilterStore from "../stores/useFilterStore";
+import { socket } from "../lib/socket";
+
 
 export default function CategoryTable() {
-  const { categories, fetchCategories, deleteCategory } = useCategoryStore();
+  const { categories, fetchCategories, deleteCategory, appendCategory, replaceCategory, removeCategoryFromState } = useCategoryStore();
   const { 
     search, 
     setSearch, 
@@ -61,6 +63,65 @@ export default function CategoryTable() {
   useEffect(() => {
     fetchCategories();
   }, [fetchCategories]);
+
+  useEffect(() => {
+    // Socket event handlers with better error handling and logging
+    const onAdded = (category) => {
+      console.log('🔄 Socket: Category added event received:', category);
+      appendCategory(category);
+    };
+
+    const onUpdated = (category) => {
+      console.log('🔄 Socket: Category updated event received:', category);
+      replaceCategory(category);
+    };
+
+    const onDeleted = (data) => {
+      console.log('🔄 Socket: Category deleted event received:', data);
+
+      // Handle different data structures
+      let categoryId;
+      if (typeof data === 'object' && data.id) {
+        categoryId = data.id;
+      } else if (typeof data === 'number' || typeof data === 'string') {
+        categoryId = data;
+      } else {
+        console.error('❌ Invalid delete event data structure:', data);
+        return;
+      }
+
+      removeCategoryFromState(categoryId);
+    };
+
+    // Add socket connection status logging
+    const onConnect = () => {
+      console.log('Socket connected');
+    };
+
+    const onDisconnect = (reason) => {
+      console.log('Socket disconnected:', reason);
+    };
+
+    const onError = (error) => {
+      console.error('Socket error:', error);
+    };
+
+    socket.on('connect', onConnect);
+    socket.on('disconnect', onDisconnect);
+    socket.on('error', onError);
+    socket.on("categoryAdded", onAdded);
+    socket.on("categoryUpdated", onUpdated);
+    socket.on("categoryDeleted", onDeleted);
+
+    return () => {
+      socket.off('connect', onConnect);
+      socket.off('disconnect', onDisconnect);
+      socket.off('error', onError);
+      socket.off("categoryAdded", onAdded);
+      socket.off("categoryUpdated", onUpdated);
+      socket.off("categoryDeleted", onDeleted);
+    };
+  }, [appendCategory, replaceCategory, removeCategoryFromState]);
 
   const openAddDialog = () => {
     setSelectedRow(null);

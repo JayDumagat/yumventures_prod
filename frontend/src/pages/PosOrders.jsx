@@ -7,9 +7,10 @@ import OrderCard from "../components/OrderCard";
 import FormatDateTime from "../utils/DateTimeFormatter";
 import { X } from "lucide-react";
 import {toast} from "react-toastify";
+import { socket } from "../lib/socket";
 
 export default function PosOrders() {
-  const { orders, fetchOrders, changeOrderStatus } = useOrderStore();
+  const { orders, fetchOrders, changeOrderStatus, appendOrder, replaceOrder } = useOrderStore();
   const [selectedOrder, setSelectedOrder] = useState(null);
   const [activeTab, setActiveTab] = useState("all");
 
@@ -39,6 +40,45 @@ export default function PosOrders() {
   useEffect(() => {
     fetchOrders();
   }, [fetchOrders]);
+
+  useEffect(() => {
+    // Socket event handlers
+    const onAdded = (order) => {
+      console.log('🔄 Socket: Order added event received:', order);
+      appendOrder(order);
+    };
+
+    const onUpdated = (order) => {
+      console.log('🔄 Socket: Order updated event received:', order);
+      replaceOrder(order);
+    };
+
+    const onConnect = () => {
+      console.log('✅ Socket connected');
+    };
+
+    const onDisconnect = (reason) => {
+      console.log('❌ Socket disconnected:', reason);
+    };
+
+    const onError = (error) => {
+      console.error('⚠️ Socket error:', error);
+    };
+
+    socket.on('connect', onConnect);
+    socket.on('disconnect', onDisconnect);
+    socket.on('error', onError);
+    socket.on("orderAdded", onAdded);
+    socket.on("orderStatusUpdated", onUpdated);
+
+    return () => {
+      socket.off('connect', onConnect);
+      socket.off('disconnect', onDisconnect);
+      socket.off('error', onError);
+      socket.off("orderAdded", onAdded);
+      socket.off("orderStatusUpdated", onUpdated);
+    };
+  }, [appendOrder, replaceOrder]);
 
   const filteredOrders =
     activeTab === "all"

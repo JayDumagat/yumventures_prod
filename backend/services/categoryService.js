@@ -1,4 +1,5 @@
 const {Category, sequelize} = require("../models");
+const { getIO } = require("../utils/socket");
 
 const insertCategory = async (name, description) => {
     const transaction = await sequelize.transaction();
@@ -9,6 +10,8 @@ const insertCategory = async (name, description) => {
         }, { transaction });
 
         await transaction.commit();
+        getIO().emit('categoryAdded', category);
+
         return category;
     } catch (error) {
         await transaction.rollback();
@@ -71,6 +74,7 @@ const editCategory = async (id, name, description) => {
         category.description = description;
         await category.save({ transaction });
         await transaction.commit();
+        getIO().emit('categoryUpdated', category);
         return category;
     } catch (error) {
         await transaction.rollback();
@@ -87,8 +91,18 @@ const removeCategory = async (id) => {
             throw new Error("Category not found");
         }
 
+        const categoryData = {
+            id: category.id,
+            name: category.name,
+            description: category.description
+        };
+
         await category.destroy({ transaction });
         await transaction.commit();
+        getIO().emit('categoryDeleted', {
+            id: parseInt(id),
+            category: categoryData
+        });
         return category;
     } catch (error) {
         await transaction.rollback();
