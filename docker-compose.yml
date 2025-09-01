@@ -1,3 +1,5 @@
+version: '3.8'
+
 services:
   mysql:
     image: mysql:8.0
@@ -32,8 +34,8 @@ services:
     restart: always
     command: server /data --console-address ":9001"
     ports:
-      - "9000:9000"  # S3 API
-      - "9001:9001"  # MinIO Web Console
+      - "9000:9000"
+      - "9001:9001"
     environment:
       MINIO_ROOT_USER: minioadmin
       MINIO_ROOT_PASSWORD: minioadmin123
@@ -43,21 +45,19 @@ services:
       - app-network
 
   backend:
-    build: ./backend
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
     container_name: backend_app
     restart: always
-    command: sh -c "npm install && npx sequelize-cli db:migrate && npm run dev"
+    command: ["sh", "./docker-entrypoint.sh"]
     working_dir: /app
-    volumes:
-      - ./backend:/app
-      - /app/node_modules
-    expose:
-      - "3000"
     depends_on:
       - mysql
       - redis
       - minio
     environment:
+      NODE_ENV: production
       DB_HOST: mysql
       DB_USER: myuser
       DB_PASSWORD: mypassword
@@ -74,20 +74,12 @@ services:
       - app-network
 
   frontend:
-    build: ./frontend
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
     container_name: frontend_app
     restart: always
-    command: sh -c "npm install && npm run dev -- --host 0.0.0.0"
-    working_dir: /app
-    volumes:
-      - ./frontend:/app
-      - /app/node_modules
-    expose:
-      - "5173"
-    depends_on:
-      - backend
-    environment:
-      VITE_API_URL: http://backend:3000
+    command: ["nginx", "-g", "daemon off;"]
     networks:
       - app-network
 
