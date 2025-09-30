@@ -156,7 +156,7 @@ function App() {
 
             <Route path="/profile" element={
                 <Suspense fallback={<div>Loading...</div>}>
-                    <ProtectedRoute routeTo={"/login"} rolesAllowed={["everyone"]}>
+                    <ProtectedRoute routeTo={"/login"} rolesAllowed={["owner", "cashier", "customer"]}>
                         <Profile />
                     </ProtectedRoute>
                 </Suspense>

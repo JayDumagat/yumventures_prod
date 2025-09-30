@@ -90,7 +90,7 @@ export default function ViewMenuItem({ menuItem, deleteDialog, closeDialog }) {
                           ? imagePreview
                           : menuItem.image?.startsWith("http")
                               ? menuItem.image
-                              : `${import.meta.env.VITE_API_URL}${menuItem.image || ""}`
+                              : `${menuItem.image || ""}`
                     }
                     alt={`${menuItem.name} image`}
                   />

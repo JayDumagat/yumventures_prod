@@ -16,7 +16,7 @@ const useStatStore = create((set) => ({
     fetchCategoryStats: async () => {
         set({ loading: true });
         try {
-            const response = await AxiosClient.get("/api/statistics/menu-to-category");
+            const response = await AxiosClient.get("/statistics/menu-to-category");
             set({ categoryStats: response.data, loading: false });
         } catch (error) {
             set({ error: error.message, loading: false });
@@ -26,7 +26,7 @@ const useStatStore = create((set) => ({
     fetchReportStat: async (type) => {
         set({ loading: true });
         try {
-            const response = await AxiosClient.get(`/api/statistics/reports-statistics?type=${type}`);
+            const response = await AxiosClient.get(`/statistics/reports-statistics?type=${type}`);
             set({ reportStat: response.data, loading: false });
         } catch (error) {
             set({ error: error.message, loading: false });
@@ -36,7 +36,7 @@ const useStatStore = create((set) => ({
     fetchSalesTrend: async (type) => {
         set({ loading: true });
         try {
-            const response = await AxiosClient.get(`/api/statistics/sales-trend?type=${type}`);
+            const response = await AxiosClient.get(`/statistics/sales-trend?type=${type}`);
             set({ salesTrend: response.data, loading: false });
         } catch (error) {
             set({ error: error.message, loading: false });
@@ -46,7 +46,7 @@ const useStatStore = create((set) => ({
     fetchTopCategories: async (outputType) => {
         set({ loading: true });
         try {
-            const response = await AxiosClient.get(`/api/statistics/top-categories?outputType=${outputType}`);
+            const response = await AxiosClient.get(`/statistics/top-categories?outputType=${outputType}`);
             set({ topCategories: response.data, loading: false });
         } catch (error) {
             set({ error: error.message, loading: false });
@@ -56,7 +56,7 @@ const useStatStore = create((set) => ({
     fetchCustomerActivity: async () => {
         set({ loading: true });
         try {
-            const response = await AxiosClient.get("/api/statistics/customer-activity");
+            const response = await AxiosClient.get("/statistics/customer-activity");
             set({ customerActivity: response.data, loading: false });
         } catch (error) {
             set({ error: error.message, loading: false });

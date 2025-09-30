@@ -5,7 +5,7 @@ const useUserStore = create((set, get) => ({
     users: [],
     fetchStaff: async () => {
         try {
-            const response = await AxiosClient.get("/api/staffs");
+            const response = await AxiosClient.get("/staffs");
             set({ users: response.data });
         } catch (error) {
             console.error("Error fetching staff:", error);
@@ -14,7 +14,7 @@ const useUserStore = create((set, get) => ({
 
     addUser: async (values) => {
         try {
-            const response = await AxiosClient.post("/api/staffs", values);
+            const response = await AxiosClient.post("/staffs", values);
            const { fetchStaff } = get(); // Get the function from Zustand store
             fetchStaff(); // Refresh the staff list after adding a new user
             return response.data; // Return the newly added user

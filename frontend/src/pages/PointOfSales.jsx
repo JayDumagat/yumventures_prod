@@ -6,15 +6,32 @@ import SearchField from "../components/SearchField";
 import PosScrollCategoryButton from "../components/PosScrollCategoryButton";
 import { HandCoins } from "lucide-react";
 import usePOSStore from "../stores/usePOSStore";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { ReusableDialog } from "../components/ReusableDialog";
 import OrderPaymentForm from "../components/OrderPaymentForm";
-import PosOrderConfirmation from "../components/POSOrderConfirmation";
+import PosOrderConfirmation from "../components/PosOrderConfirmation";
+import useMenuItemStore from "../stores/useMenuItemStore.jsx";
+import useCategoryStore from "../stores/useCategoryStore.jsx";
+
 export default function PointOfSales() {
+  const { menuItems, fetchMenuItems } = useMenuItemStore();
+  const {categories, fetchCategories} = useCategoryStore();
+  const [selectedCategoryId, setSelectedCategoryId] = useState(null);
+  const [searchTerm, setSearchTerm] = useState("");
   const { cart } = usePOSStore();
   const [dialogMode, setDialogMode] = useState(null);
   const [submittedOrderDetails, setSubmittedOrderDetails] = useState(null);
   const [response, setResponse] = useState(null);
+  
+  const handleSearchChange = (e) => {
+    setSearchTerm(e.target.value);
+  }
+
+  useEffect(() => {
+    fetchMenuItems(); // fetch all items initially
+    fetchCategories(); // fetch all categories initially
+  }, [fetchMenuItems, fetchCategories]);
+  
   const openPaymentDialog = () => {
     setDialogMode("payment");
   };
@@ -26,9 +43,30 @@ export default function PointOfSales() {
   const openViewConfirmation = (details, response) => {
     setSubmittedOrderDetails(details);
     setResponse(response);
-    console.log('Response:', response); 
     setDialogMode("confirm");
 };
+
+  const filteredItems = Array.isArray(menuItems) ? menuItems.filter((item) => {
+    // Skip null or undefined items
+    if (!item || typeof item !== 'object') {
+      console.warn("Invalid item in menuItems array:", item);
+      return false;
+    }
+
+    // Check for category match with both possible category ID locations
+    const matchesCategory = selectedCategoryId
+        ? (item.categoryId === selectedCategoryId ||
+            (item.category && item.category.id === selectedCategoryId))
+        : true;
+
+    // Check for search term match
+    const matchesSearchTerm = searchTerm
+        ? item.name.toLowerCase().includes(searchTerm.toLowerCase())
+        : true;
+
+    return matchesCategory && matchesSearchTerm;
+  }) : [];
+
   return (
     <Layout>
       {dialogMode === "payment" && (
@@ -52,9 +90,9 @@ export default function PointOfSales() {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 lg:h-[calc(100vh-3rem)] h-[calc(100vh-6rem)]">
         {/* Left Panel: scrollable */}
         <div className="col-span-1 lg:col-span-2 overflow-y-auto pr-2 p-2">
-          <SearchField />
-          <PosScrollCategoryButton />
-          <PosMenuItems />
+          <SearchField value={searchTerm} onChange={handleSearchChange}/>
+          <PosScrollCategoryButton categories={categories}  selectedCategoryId={selectedCategoryId} onSelect={setSelectedCategoryId}/>
+          <PosMenuItems filteredItems={filteredItems}/>
         </div>
 
         <div className="col-span-1 flex flex-col bg-white border border-gray-200 dark:bg-neutral-800 rounded-xl p-4 overflow-hidden">

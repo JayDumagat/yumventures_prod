@@ -30,9 +30,8 @@ export default function CustomerLogin({redirectTo}) {
         onSubmit: async (values, { setSubmitting }) => {
             try {
                 setSubmitting(true);
-                const isLoggedIn = await login(values);
-                console.log(isLoggedIn);
-                if (isLoggedIn) {
+                const result = await login(values);
+                if (result.success) {
                     toast.success("Login successful!");
                     setTimeout(() => {
                         navigate(redirectTo);

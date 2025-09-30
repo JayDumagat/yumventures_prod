@@ -1,16 +1,7 @@
-import { useEffect } from "react";
-import useMenuItemStore from "../stores/useMenuItemStore";
 import usePOSStore from "../stores/usePOSStore";
 
-export default function PosMenuItems() {
-  const { menuItems, fetchMenuItems } = useMenuItemStore();
+export default function PosMenuItems({ filteredItems = [] }) {
   const { addToCart} = usePOSStore()
-
-  useEffect(() => {
-    fetchMenuItems(1, "", "", 10); 
-  }, [fetchMenuItems]);
-
-  
 
   return (
     <div>
@@ -20,8 +11,8 @@ export default function PosMenuItems() {
         {/* Grid */}
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {/* Your Cards */}
-          {menuItems.length > 0 ? (
-            menuItems.map((item, index) => (
+          {filteredItems.length > 0 ? (
+              filteredItems.map((item, index) => (
               <div
                 onClick={() => addToCart(item)}
                 role="button"
@@ -30,7 +21,7 @@ export default function PosMenuItems() {
               >
                 <div className="w-full aspect-square overflow-hidden rounded-xl">
                   <img
-                    src={`${import.meta.env.VITE_API_URL}${item.image}`}
+                    src={`${item.image}`}
                     alt={item.name}
                     className="w-full h-full object-cover"
                   />

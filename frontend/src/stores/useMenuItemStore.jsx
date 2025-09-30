@@ -16,7 +16,7 @@ const useMenuItemStore = create((set, get) => ({
     fetchMenuItems: async (page, status, search, pageSize) => {
         set({loading: true, error: null});
         try {
-            const response = await AxiosClient.get('/api/menu-items', {
+            const response = await AxiosClient.get('/menu-items', {
                 params: { page, status, search, pageSize }
             });
 
@@ -52,7 +52,7 @@ const useMenuItemStore = create((set, get) => ({
     addMenuItem: async (values) => {
         set({loading: true, error: null});
         try {
-            await AxiosClient.post('/api/menu-items', values, {
+            await AxiosClient.post('/menu-items', values, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                 },
@@ -73,7 +73,7 @@ const useMenuItemStore = create((set, get) => ({
     editMenuItem: async(id, values) => {
         set({loading: true, error: null});
         try {
-            await AxiosClient.put(`/api/menu-items/${id}`, values, {
+            await AxiosClient.put(`/menu-items/${id}`, values, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                 },
@@ -94,7 +94,7 @@ const useMenuItemStore = create((set, get) => ({
     deleteMenuItem: async (id) => {
         set({loading: true, error: null});
         try {
-            await AxiosClient.delete(`/api/menu-items/${id}`);
+            await AxiosClient.delete(`/menu-items/${id}`);
 
             // Refresh menu items after successful deletion
             const { fetchMenuItems } = get();
@@ -111,7 +111,7 @@ const useMenuItemStore = create((set, get) => ({
     fetchPopularMenuItems: async () => {
         set({loading: true, error: null});
         try {
-            const response = await AxiosClient.get('/api/menu-items/most-popular');
+            const response = await AxiosClient.get('/menu-items/most-popular');
             set({popularMenuItems: response.data, loading: false});
         } catch (error) {
             console.error('Error fetching popular menu items:', error);
@@ -126,7 +126,7 @@ const useMenuItemStore = create((set, get) => ({
     getMenuItemById: async (id) => {
         set({loading: true, error: null});
         try {
-            const response = await AxiosClient.get(`/api/menu-items/${id}`);
+            const response = await AxiosClient.get(`/menu-items/${id}`);
             set({loading: false});
             return response.data;
         } catch (error) {

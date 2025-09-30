@@ -169,7 +169,7 @@ export default function OrderDetails({ orders }) {
               {order.orderItems.map((item) => (
                 <div key={item.id} className="flex items-start space-x-4">
                   <img
-                    src={`${import.meta.env.VITE_API_URL}${item.menuItem.image}`}
+                    src={`${item.menuItem.image}`}
                     alt={item.menuItem.name}
                     className="w-16 h-16 rounded object-cover"
                   />

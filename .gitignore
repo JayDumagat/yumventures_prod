@@ -1,0 +1,8 @@
+# .gitignore
+
+.env
+.env
+backend/.env
+backend/services/paymongoService.js
+backend/.env
+backend/services/paymongoService.js

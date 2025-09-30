@@ -41,7 +41,7 @@ export default function SidebarFooter() {
             <div>
               <img src={
                 user?.profileImage
-                    ? `${import.meta.env.VITE_API_URL}${user.profileImage}`
+                    ? `${user.profileImage}`
                     : "https://preline.co/assets/img/160x160/img1.jpg"
               } alt="Profile" className="shrink-0 w-10 h-10 rounded-full"/>
             </div>

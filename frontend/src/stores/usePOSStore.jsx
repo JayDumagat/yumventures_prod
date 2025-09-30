@@ -55,7 +55,7 @@ const usePOSStore = create((set) => ({
   submitOrder: async (values) => {
     set({ isSubmitting: true });
     try {
-      const response = await AxiosClient.post("/api/orders", values);
+      const response = await AxiosClient.post("/orders", values);
       set({ isSubmitting: false });
       return response.data;
     } catch (error) {

@@ -8,7 +8,7 @@ const useTransactionStore = create((set) => ({
     fetchTransactions: async () => {
       set({ loading: true, error: null });
       try {
-        const response = await axiosClient.get("/api/transactions/");
+        const response = await axiosClient.get("/transactions/");
         set({ transactions: response.data, loading: false });
       } catch (error) {
         set({ error: error.message, loading: false });
@@ -18,7 +18,7 @@ const useTransactionStore = create((set) => ({
     fetchPaymentLink: async (values) => {
       set({ loading: true, error: null });
       try {
-        const response = await axiosClient.post("/api/transactions/request-payment-link", values);
+        const response = await axiosClient.post("/transactions/request-payment-link", values);
         set({ paymentLink: response.data, loading: false });
         return response.data;
       } catch (error) {

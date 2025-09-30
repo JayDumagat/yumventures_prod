@@ -9,7 +9,7 @@ const useDashboardStore = create((set) => ({
   fetchDashboardStat: async () => {
     set({ loading: true });
     try {
-      const response = await AxiosClient.get("/api/statistics/dashboard-statistics");
+      const response = await AxiosClient.get("/statistics/dashboard-statistics");
       set({ dashboardStat: response.data, loading: false });
     } catch (error) {
       set({ error, loading: false });
@@ -20,7 +20,7 @@ const useDashboardStore = create((set) => ({
   fetchThirtyDaysSales: async () => {
     set({ loading: true });
     try {
-      const response = await AxiosClient.get("/api/statistics/sales-by-filter");
+      const response = await AxiosClient.get("/statistics/sales-by-filter");
       set({ thirtyDaySaleData: response.data.totalSales, loading: false });
     } catch (error) {
       set({ error, loading: false });

@@ -14,7 +14,7 @@ const useCategoryStore = create((set, get) => ({
   fetchCategories: async (page, status, search, pageSize) => {
     set({ loading: true });
     try {
-      const response = await AxiosClient.get("/api/categories", {
+      const response = await AxiosClient.get("/categories", {
         params: { page, status, search, pageSize }
     });
       set({ categories: response.data, loading: false });
@@ -26,7 +26,7 @@ const useCategoryStore = create((set, get) => ({
   addCategories: async (values) => {
     set({ loading: true });
     try {
-      const response = await AxiosClient.post("/api/categories", values);
+      const response = await AxiosClient.post("/categories", values);
   
       const { fetchCategories } = get();
       await fetchCategories(1, "", "", 10);
@@ -44,7 +44,7 @@ const useCategoryStore = create((set, get) => ({
   editCategory: async (id, values) => {
     set({ loading: true });
     try {
-      const response = await AxiosClient.put(`/api/categories/${id}`, values);
+      const response = await AxiosClient.put(`/categories/${id}`, values);
   
       const { fetchCategories } = get();
       await fetchCategories(1, "", "", 10);
@@ -61,7 +61,7 @@ const useCategoryStore = create((set, get) => ({
   deleteCategory: async (id) => {
     set({ loading: true });
     try {
-      const response = await AxiosClient.delete(`/api/categories/${id}`);
+      const response = await AxiosClient.delete(`/categories/${id}`);
   
       const { fetchCategories } = get();
       await fetchCategories(1, "", "", 10);

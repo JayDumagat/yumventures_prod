@@ -37,6 +37,7 @@ export default function DashboardCustomerActivityChart() {
     xaxis: {
       categories,
       labels: {
+	show: false,
         rotate: -45,
         style: {
           fontSize: '12px',

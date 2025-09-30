@@ -57,7 +57,10 @@ export default function DashboardSalesChart() {
         const day = date.getDate();
         const month = date.toLocaleString("en-US", { month: "short", timeZone: "Asia/Manila" });
         return `${day} ${month}`;
-      })
+      }),
+	labels: {
+      show: false, // hides all x-axis labels (dates)
+    },
       
     },
     yaxis: {

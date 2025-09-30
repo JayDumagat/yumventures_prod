@@ -31,9 +31,9 @@ export default function ClientLogin({redirectTo}) {
       try {
         setSubmitting(true);
 
-        const user = await login(values); // user or null
-        if (user) {
-          if (user.user.role === "owner" || user.user.role === "cashier") {
+        const result = await login(values); // user or null
+        if (result.success) {
+          if (result.user.role === "owner" || result.user.role === "cashier") {
             toast.success("Login successful!");
             setTimeout(() => {
               navigate(redirectTo);

@@ -33,7 +33,7 @@ export default function PosOrderCardList() {
             <div className="relative flex items-center overflow-hidden">
               <img
                 className="w-12 h-full absolute inset-0 object-cover rounded-s-lg"
-                src={`${import.meta.env.VITE_API_URL}${item.image}`}
+                src={`${item.image}`}
                 alt={`${item.name}`}
               />
               <div className="grow p-4 ms-12">

@@ -2,7 +2,7 @@ const axios = require("axios");
 const base64 = require("base-64");
 require("dotenv").config();
 
-const PK = "test key here";
+const PK = "";
 const FE = process.env.FRONTEND_URL;
 
 async function createCheckoutSession(line_items, metadata) {

@@ -138,7 +138,7 @@ export default function PosOrders() {
                   className="flex items-center gap-3 bg-white border border-gray-200 shadow-2xs rounded-xl p-4 dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400"
                 >
                   <img
-                    src={`${import.meta.env.VITE_API_URL}${
+                    src={`${
                       item.menuItem?.image
                     }`}
                     alt={item.menuItem?.name}

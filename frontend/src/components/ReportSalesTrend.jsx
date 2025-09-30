@@ -36,6 +36,7 @@ export default function ReportSalesTrend() {
         text: 'Hour of Day',
       },
       labels: {
+	show: false,
         formatter: (val) => {
           const hour = parseInt(val);
           return `${hour}:00`;

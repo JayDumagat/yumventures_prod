@@ -9,7 +9,7 @@ const useOrderStore = create((set, get) => ({
     fetchOrders: async () => {
         set({ loading: true, error: null });
         try {
-            const response = await axiosClient.get('/api/orders');
+            const response = await axiosClient.get('/orders');
             set({ orders: response.data, loading: false });
         } catch (error) {
             set({ error: error.message, loading: false });
@@ -19,7 +19,7 @@ const useOrderStore = create((set, get) => ({
     changeOrderStatus: async (orderId, status) => {
         set({ loading: true, error: null });
         try {
-            await axiosClient.put(`/api/orders/status-update/${orderId}`, { status });
+            await axiosClient.put(`/orders/status-update/${orderId}`, { status });
             const {fetchOrders} = get();
             fetchOrders();
             set({ loading: false });
@@ -31,7 +31,7 @@ const useOrderStore = create((set, get) => ({
     fetchUserOrders: async () => {
         set({ loading: true, error: null });
         try {
-            const response = await axiosClient.get('/api/orders/user-orders');
+            const response = await axiosClient.get('/orders/user-orders');
             set({ orders: response.data, loading: false });
         } catch (error) {
             set({ error: error.message, loading: false });

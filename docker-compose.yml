@@ -45,19 +45,16 @@ services:
       - app-network
 
   backend:
-    build:
-      context: ./backend
-      dockerfile: Dockerfile
+    build: ./backend
     container_name: backend_app
     restart: always
-    command: ["sh", "./docker-entrypoint.sh"]
-    working_dir: /app
+    expose:
+      - "3000"
     depends_on:
       - mysql
       - redis
       - minio
     environment:
-      NODE_ENV: production
       DB_HOST: mysql
       DB_USER: myuser
       DB_PASSWORD: mypassword
@@ -74,12 +71,11 @@ services:
       - app-network
 
   frontend:
-    build:
-      context: ./frontend
-      dockerfile: Dockerfile
+    build: ./frontend
     container_name: frontend_app
     restart: always
-    command: ["nginx", "-g", "daemon off;"]
+    depends_on:
+      - backend
     networks:
       - app-network
 
@@ -91,9 +87,9 @@ services:
       - "80:80"
       - "443:443"
     volumes:
-      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
-      - ./nginx/conf.d:/etc/nginx/conf.d:ro
-      - ./certs:/etc/nginx/certs:ro
+      - ./nginx/conf.d:/etc/nginx/conf.d
+      - ./nginx/certs:/etc/nginx/certs:ro
+      - ./frontend/dist:/usr/share/nginx/html:ro
     depends_on:
       - frontend
       - backend

@@ -1,9 +1,8 @@
-import { LayoutDashboard } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import useCategoryStore from "../stores/useCategoryStore";
 
 
-export default function PosScrollCategoryButton() {
+export default function PosScrollCategoryButton({ selectedCategoryId, onSelect }) {
   const { categories, fetchCategories } = useCategoryStore()
   const [activeTab, setActiveTab] = useState("All Menu");
 
@@ -23,8 +22,8 @@ export default function PosScrollCategoryButton() {
       <div className="flex gap-3 py-2 min-w-max">
         <button
           type="button"
-          className={activeTab === "All Menu" ? activeClass : inactiveClass}
-          onClick={() => setActiveTab("All Menu")}
+          className={selectedCategoryId === null ? activeClass : inactiveClass}
+          onClick={() => onSelect(null)}
         >
           All Menu
         </button>
@@ -33,8 +32,8 @@ export default function PosScrollCategoryButton() {
           <button
             key={category.id}
             type="button"
-            className={activeTab === category.name ? activeClass : inactiveClass}
-            onClick={() => setActiveTab(category.name)}
+            className={selectedCategoryId === category.id ? activeClass : inactiveClass}
+            onClick={() => onSelect(category.id)}
           >
             
             {category.name}

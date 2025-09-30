@@ -64,7 +64,7 @@ export default function Cart() {
               {items.map((item) => (
                 <div key={item.id} className="flex gap-4 border-b border-gray-300 pb-6">
                   <img
-                    src={`${import.meta.env.VITE_API_URL}${item.image}`}
+                    src={`${item.image}`}
                     alt={item.name}
                     className="w-28 h-28 rounded object-cover"
                   />

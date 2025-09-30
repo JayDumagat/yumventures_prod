@@ -285,10 +285,7 @@ export default function MenuItemTable() {
                                   <div className="cursor-pointer flex items-center gap-x-4">
                                     <img
                                         className="shrink-0 size-9.5 rounded-lg"
-                                        src={
-                                            import.meta.env.VITE_API_URL +
-                                            menuItem.image
-                                        }
+                                        src={menuItem.image}
                                         alt={`Menu Item ${menuItem.name}`}
                                     />
 

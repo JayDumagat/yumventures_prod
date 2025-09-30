@@ -1,3 +1,4 @@
+import { useNavigate } from "react-router-dom";
 import {ErrorMessage, Field, Form, Formik} from "formik";
 import {useRef, useState} from "react";
 import {Upload} from "lucide-react";
@@ -9,6 +10,7 @@ import {profileValidationSchema} from "../validations/ProfileValidation";
 export default function Profile() {
     const {user, updateProfile} = useAuthStore();
     const fileInputRef = useRef(null);
+    const navigate = useNavigate();
     const [imagePreview, setImagePreview] = useState(null);
 
     if (!user) {
@@ -96,7 +98,7 @@ export default function Profile() {
                                                     imagePreview
                                                         ? imagePreview
                                                         : user?.profileImage
-                                                            ? `${import.meta.env.VITE_API_URL}${user.profileImage}`
+                                                            ? `${user.profileImage}`
                                                             : "https://preline.co/assets/img/160x160/img1.jpg"
                                                 } alt="Profile"/>
                                             <div className="flex gap-x-2">
@@ -196,10 +198,10 @@ export default function Profile() {
                                 {/* End Grid */}
 
                                 <div className="mt-5 flex justify-end gap-x-2">
-                                    <Link to={"/"}
-                                          className="py-2 px-3 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-gray-200 bg-white text-gray-800 shadow-2xs hover:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none focus:outline-hidden focus:bg-gray-50 dark:bg-transparent dark:border-neutral-700 dark:text-neutral-300 dark:hover:bg-neutral-800 dark:focus:bg-neutral-800">
+                                    <button onClick={() => navigate(-1)}
+                                          className=" py-2 px-3 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-gray-200 bg-white text-gray-800 shadow-2xs hover:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none focus:outline-hidden focus:bg-gray-50 dark:bg-transparent dark:border-neutral-700 dark:text-neutral-300 dark:hover:bg-neutral-800 dark:focus:bg-neutral-800">
                                         Cancel
-                                    </Link>
+                                    </button>
                                     <button
                                         type="submit"
                                         disabled={isSubmitting}

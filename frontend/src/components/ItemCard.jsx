@@ -23,7 +23,7 @@ export default function ItemCard({ item, hideItemsSold = false }) {
       <div className="relative pt-[50%] sm:pt-[70%] rounded-xl overflow-hidden">
         <img
           className="size-full absolute top-0 start-0 object-cover group-hover:scale-105 group-focus:scale-105 transition-transform duration-500 ease-in-out rounded-xl"
-          src={`${import.meta.env.VITE_API_URL || ''}${item.image || ''}`}
+          src={`${item.image || ''}`}
           alt={item.name || 'Menu item'}
         />
       </div>

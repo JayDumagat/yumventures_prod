@@ -10,11 +10,11 @@ const useAuthStore = create(
 
         login: async (values) => {
             try {
-                const response = await axiosClient.post("/api/auth/login", values);
+                const response = await axiosClient.post("/auth/login", values);
 
-                if (response.data && response.data.user) {
+                if (response.data.user) {
                     set({ user: response.data.user }); // Store full user object
-                    return { success: true, user: response.data.user }; // Return user data for extra logic
+                    return { success: true, user: response.data.user };
                 }
 
                 return { success: false, error: "Invalid response from server" };
@@ -26,7 +26,7 @@ const useAuthStore = create(
 
       register: async (values) => {
         try {
-          const response = await axiosClient.post("/api/auth/register", values);
+          const response = await axiosClient.post("/auth/register", values);
           set({ user: response.data.user });
           return true;
         } catch (error) {
@@ -37,7 +37,7 @@ const useAuthStore = create(
 
       checkAuth: async () => {
         try {
-          const response = await axiosClient.get("/api/auth/session");
+          const response = await axiosClient.get("/auth/session");
           set({ user: response.data.user });
         } catch {
           toast.error("Session expired. Please log in again.");
@@ -47,7 +47,7 @@ const useAuthStore = create(
 
       logout: async () => {
         try {
-          await axiosClient.post("/api/auth/logout", {}, { withCredentials: true });
+          await axiosClient.post("/auth/logout", {}, { withCredentials: true });
           set({ user: null });
         } catch (err) {
           console.error('Logout failed:', err);
@@ -70,7 +70,7 @@ const useAuthStore = create(
                 console.log('=== END AUTH STORE DEBUG ===');
 
                 // ADD the same headers as your working menu item store
-                const response = await axiosClient.put("/api/auth/profile", formData, {
+                const response = await axiosClient.put("/auth/profile", formData, {
                     headers: {
                         'Content-Type': 'multipart/form-data',
                     },
@@ -86,7 +86,7 @@ const useAuthStore = create(
 
       sendEmail: async (email) => {
         try {
-          await axiosClient.post("/api/auth/request-code", { email });
+          await axiosClient.post("/auth/request-code", { email });
           return true;
         } catch (error) {
           console.error("Error sending email:", error);
@@ -96,7 +96,7 @@ const useAuthStore = create(
 
       validateCode: async (code) => {
         try {
-          await axiosClient.post("/api/auth/validate-code", { code });
+          await axiosClient.post("/auth/validate-code", { code });
           return true;
         } catch (error) {
           console.error("Error validating code:", error);
@@ -106,7 +106,7 @@ const useAuthStore = create(
 
       resendCode: async (email) => {
         try {
-          await axiosClient.post("/api/auth/request-code", { email });
+          await axiosClient.post("/auth/request-code", { email });
           return true;
         } catch (error) {
           console.error("Error resending code:", error);
@@ -116,7 +116,7 @@ const useAuthStore = create(
 
       resetPassword: async (email, password) => {
         try {
-          await axiosClient.post("/api/auth/reset-password", { email, password });
+          await axiosClient.post("/auth/reset-password", { email, password });
           return true;
         } catch (error) {
           console.error("Error resetting password:", error);
