@@ -99,6 +99,7 @@ export default function PosOrders() {
                   orderNumber={order.id}
                   time={order.createdAt}
                   itemCount={order.orderItems.length}
+                  referenceNumber={order.referenceNumber}
                   status={order.status}
                   onClick={() => handleOpenOrderDetails(order)}
                 />

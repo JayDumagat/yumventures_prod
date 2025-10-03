@@ -1,10 +1,12 @@
 const { Order, OrderItem, MenuItem, sequelize } = require("../models");
 const { getIO } = require("../utils/socket");
+const { Op } = require("sequelize");
 
 const insertOrder = async (
   total,
   tenderedAmount,
   change,
+  referenceNumber,
   orderedBy,
   status
 ) => {
@@ -16,11 +18,13 @@ const insertOrder = async (
         total,
         tenderedAmount,
         change,
+        referenceNumber,
         orderedBy,
         status,
       },
       { transaction }
     );
+    await transaction.commit();
 
       const orderWithDetails = await Order.findByPk(order.id, {
           include: [
@@ -41,7 +45,7 @@ const insertOrder = async (
 
       getIO().emit("orderAdded", orderWithDetails);
 
-    await transaction.commit();
+
     return order;
   } catch (error) {
     await transaction.rollback();
@@ -72,6 +76,49 @@ const findAllOrders = async () => {
   } catch (error) {
     throw error;
   }
+};
+
+const findOrdersByDateRange = async (from, to) => {
+    try {
+        const orders = await Order.findAll({
+            where: {
+                createdAt: {
+                    [Op.between]: [new Date(from), new Date(to)],
+                },
+            },
+            include: [
+                {
+                    model: OrderItem,
+                    as: "orderItems",
+                    required: false,
+                    include: [
+                        {
+                            model: MenuItem,
+                            as: "menuItem",
+                            attributes: ["id", "name", "image"],
+                        },
+                    ],
+                },
+            ],
+            order: [["createdAt", "ASC"]],
+        });
+
+        // Flatten into CSV/Excel-friendly data
+        return orders.flatMap((order) =>
+            order.orderItems.map((item) => ({
+                orderId: order.id,
+                date: order.createdAt,
+                customer: order.orderedBy,
+                item: item.menuItem?.name || "Unknown",
+                qty: item.quantity,
+                price: item.price,
+                total: item.quantity * item.price,
+                paymentStatus: order.status,
+            }))
+        );
+    } catch (error) {
+        throw error;
+    }
 };
 
 const findAllUserOrders = async (userId) => {
@@ -155,4 +202,5 @@ module.exports = {
   findOrderById,
   changeOrderStatus,
   findAllUserOrders,
+findOrdersByDateRange,
 };

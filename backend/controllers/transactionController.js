@@ -6,6 +6,7 @@ const { createCheckoutSession } = require('../services/paymongoService');
 const { findAllOrders } = require('../services/transactionService');
 const { findMenuItemById } = require('../services/menuItemService');
 const crypto = require('crypto');
+const { generateReferenceNumber } = require("../utils/generateReferenceNumber")
 
 const getAllOrders = async (req, res) => {
     try {
@@ -22,13 +23,15 @@ const requestPaymentLink = async (req, res) => {
         const { orderedItems, total, tenderedAmount, change } = req.body;
         const userSession = req.session.user;
 
+        const referenceNumber = generateReferenceNumber();
+
         // Build line_items for checkout session
         const lineItems = await Promise.all(
             orderedItems.map(async item => {
                 const menuItem = await findMenuItemById(item.menuItemId);
                 return {
                     name: menuItem.name,
-                    amount: 2000, // convert to cents parseFloat(item.price) * 100
+                    amount: 100, // convert to cents parseFloat(item.price) * 100
                     currency: "PHP",
                     quantity: item.quantity
                 };
@@ -37,6 +40,7 @@ const requestPaymentLink = async (req, res) => {
 
         // Metadata for reconstructing order
         const metadata = {
+            referenceNumber,
             userId: userSession.id,
             orderItems: JSON.stringify(orderedItems),
             total,
@@ -44,7 +48,7 @@ const requestPaymentLink = async (req, res) => {
             change
         };
 
-        const checkoutUrl = await createCheckoutSession(lineItems, metadata);
+        const checkoutUrl = await createCheckoutSession(lineItems, metadata, referenceNumber);
         res.status(200).json({ checkoutUrl });
     } catch (err) {
         console.error('Error creating checkout session:', err.response?.data || err);
@@ -55,14 +59,15 @@ const requestPaymentLink = async (req, res) => {
 const handlePaymongoWebhook = async (req, res) => {
   try {
     const event = req.body;
-const eventType = event.data.attributes.type;
+    console.log(event)
+    const eventType = event.data.attributes.type;
+    const metadata = event.data.attributes?.data?.attributes?.metadata;
+    //const externalRef = event.data.attributes?.data?.attributes?.external_reference_number;
 
-const metadata = event.data.attributes?.data?.attributes?.metadata;
-
-if (!metadata) {
-  console.warn('Metadata not found in event');
-  return res.status(200).send('No metadata to process');
-}
+    if (!metadata) {
+      console.warn('Metadata or reference number missing');
+      return res.status(200).send('No metadata to process');
+    }
 
 const items = JSON.parse(metadata.orderItems);
 
@@ -77,6 +82,7 @@ const items = JSON.parse(metadata.orderItems);
       metadata.total,
       metadata.tenderedAmount,
       metadata.change,
+      metadata.referenceNumber,
       metadata.userId,
       'processing'
     );

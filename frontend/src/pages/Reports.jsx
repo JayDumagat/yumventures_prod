@@ -6,11 +6,15 @@ import DashboardCustomerActivityChart from "../components/DashboardCustomerActiv
 import ReportTopProduct from "../components/ReportTopProduct";
 import ReportPeriodButtons from "../components/ReportPeriodButton";
 import ReportPieChart from "../components/ReportPieChart";
+import ExportButton from "../components/ExportButton";
 
 export default function Reports() {
   return (
     <Layout>
-      <ReportPeriodButtons />
+     <ReportPeriodButtons/>
+      <div className="flex justify-between items-center px-4 py-2 sm:px-6 lg:px-8">
+        <ExportButton />
+      </div>
       <ReportStatCard />
       <div className="max-w-[85rem] px-4 py-2 sm:px-6 lg:px-8 lg:py-2 mx-auto">
         <div className="grid sm:grid-cols-2 lg:grid-cols-5 gap-4 sm:gap-6">

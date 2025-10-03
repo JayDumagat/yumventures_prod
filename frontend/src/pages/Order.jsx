@@ -2,12 +2,15 @@ import { useEffect, useState } from "react";
 import Navbar from "../components/Navbar";
 import OrderDetails from "../components/OrderDetails";
 import useOrderStore from "../stores/useOrderStore";
+import useAuthStore from "../stores/useAuthStore";
+import { socket } from "../lib/socket";
 
 const statuses = ["All", "Pending", "Processing", "Completed", "Cancelled"];
 const PAGE_SIZE = 5;
 
 const Order = () => {
-  const { orders, fetchUserOrders } = useOrderStore();
+  const { user } = useAuthStore();
+  const { orders, fetchUserOrders, appendOrder, replaceOrder } = useOrderStore();
   const [filter, setFilter] = useState("All");
   const [page, setPage] = useState(1);
 
@@ -18,6 +21,30 @@ const Order = () => {
   useEffect(() => {
     setPage(1); // Reset to first page when filter changes
   }, [filter]);
+
+  useEffect(() => {
+    if (!user) return;
+
+    const onAdded = (order) => {
+      if (order.orderedBy === user.id) { 
+        appendOrder(order);
+      }
+    };
+
+    const onUpdated = (order) => {
+      if (order.orderedBy === user.id) {   // 
+        replaceOrder(order);
+      }
+    };
+
+    socket.on("orderAdded", onAdded);
+    socket.on("orderStatusUpdated", onUpdated);
+
+    return () => {
+      socket.off("orderAdded", onAdded);
+      socket.off("orderStatusUpdated", onUpdated);
+    };
+  }, [user, appendOrder, replaceOrder]);
 
   const filteredOrders =
     filter === "All"

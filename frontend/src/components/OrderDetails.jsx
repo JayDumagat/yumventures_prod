@@ -84,6 +84,14 @@ export default function OrderDetails({ orders }) {
                   </div>
                   <div>
                     <p className="mt-1 text-sm text-gray-500 dark:text-neutral-500">
+                      Reference number
+                    </p>
+                    <p className="text-sm font-semibold text-gray-800 dark:text-white">
+                      Ref: {order.referenceNumber}
+                    </p>
+                  </div>
+                  <div>
+                    <p className="mt-1 text-sm text-gray-500 dark:text-neutral-500">
                       Order date
                     </p>
                     <p className="text-sm font-semibold text-gray-800 dark:text-white">

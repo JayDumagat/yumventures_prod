@@ -4,6 +4,7 @@ export default function OrderCard({
   orderNumber,
   time,
   itemCount,
+  referenceNumber,
   status,
   onClick,
 }) {
@@ -15,7 +16,7 @@ export default function OrderCard({
       >
         <div className="flex justify-between text-sm font-medium mb-2">
           <span className="text-gray-700 dark:text-neutral-300">
-            Order #{orderNumber}
+            Order #{orderNumber} / Ref: {referenceNumber}
           </span>
           <span className="text-gray-500 dark:text-neutral-500">
             {FormatDateTime(time)}

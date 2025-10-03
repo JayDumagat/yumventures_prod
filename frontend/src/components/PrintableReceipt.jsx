@@ -98,7 +98,7 @@ const PrintableReceipt = forwardRef(({ order, response }, ref) => {
             </tr>
             <tr>
               <td>Change</td>
-              <td style={{ textAlign: "right" }}>₱{response.order.change.toLocaleString("en-PH", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+              <td style={{ textAlign: "right" }}>₱{Number(response.order.change).toFixed(2)}</td>
             </tr>
           </tbody>
         </table>

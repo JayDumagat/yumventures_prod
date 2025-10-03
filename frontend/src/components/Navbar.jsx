@@ -90,7 +90,7 @@ export default function Navbar() {
                       <ShoppingBasket className="shrink-0 size-4 me-3 md:me-2 block md:hidden" />
                       Cart
                     </NavLink>
-                     <NavLink
+                    {user && ( <NavLink
                    to={"/orders"}
                       className={({ isActive }) =>
                         `p-2 flex items-center text-sm text-gray-800 hover:text-sky-800 transition-colors rounded-lg focus:outline-hidden focus:bg-gray-100 ${
@@ -100,7 +100,7 @@ export default function Navbar() {
                     >
                       <ClipboardList className="shrink-0 size-4 me-3 md:me-2 block md:hidden" />
                       Orders
-                    </NavLink>
+                    </NavLink>)}
                    
                   </div>
                 </div>

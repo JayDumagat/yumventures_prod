@@ -21,6 +21,11 @@ module.exports = {
         type: Sequelize.DECIMAL(10, 2),
         allowNull: false
       },
+      referenceNumber: {
+            type: Sequelize.STRING,
+            allowNull: false,
+            unique: true
+        },
       orderedBy: {
         type: Sequelize.INTEGER,
         allowNull: true,

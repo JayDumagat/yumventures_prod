@@ -38,6 +38,48 @@ const useOrderStore = create((set, get) => ({
         }
     },
 
+fetchOrdersForExport: async (filter = "7days") => {
+  try {
+    const now = new Date();
+    let from, to;
+
+    switch (filter) {
+      case "7days":
+        to = new Date();
+        from = new Date();
+        from.setDate(to.getDate() - 7);
+        break;
+      case "30days":
+        to = new Date();
+        from = new Date();
+        from.setDate(to.getDate() - 30);
+        break;
+      case "thisMonth":
+        to = new Date();
+        from = new Date(to.getFullYear(), to.getMonth(), 1);
+        break;
+      case "all":
+      default:
+        to = new Date();
+        from = new Date(1970, 0, 1);
+        break;
+    }
+
+    const response = await axiosClient.get("/orders/export", {
+      params: {
+        from: from.toISOString(),
+        to: to.toISOString(),
+      },
+    });
+
+    return response.data;
+  } catch (error) {
+    set({ error: error.message });
+    throw error;
+  }
+},
+
+
     appendOrder: (order) => set((state) => ({ orders: [order, ...state.orders] })),
     replaceOrder: (updatedOrder) => set((state) => ({
         orders: state.orders.map(order => order.id === updatedOrder.id ? updatedOrder : order)

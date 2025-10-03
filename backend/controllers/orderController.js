@@ -1,11 +1,13 @@
-const {insertOrder, findAllOrders, findOrderById, changeOrderStatus, findAllUserOrders} = require('../services/orderService');
+const {insertOrder, findAllOrders, findOrderById, changeOrderStatus, findAllUserOrders, findOrdersByDateRange} = require('../services/orderService');
 const {insertOrderItem} = require('../services/orderItemService');
+const {generateReferenceNumber} = require('../utils/generateReferenceNumber');
 
 const createOrder = async (req, res) => {
     const {orderedItems, total, tenderedAmount, change} = req.body;
+    const referenceNumber = generateReferenceNumber();
 
     try {
-        const order = await insertOrder(total, tenderedAmount, change, null, 'processing');
+        const order = await insertOrder(total, tenderedAmount, change, referenceNumber, null, 'processing');
         const orderId = order.id;
 
         for (const item of orderedItems) {
@@ -28,6 +30,22 @@ const getAllOrders = async (req, res) => {
         return res.status(500).json({message: 'Internal server error'});
     }
 }
+
+const getOrdersReport = async (req, res) => {
+  try {
+    const { from, to } = req.query;
+
+    if (!from || !to) {
+      return res.status(400).json({ message: "from and to dates are required" });
+    }
+
+    const reportData = await findOrdersByDateRange(from, to);
+    return res.status(200).json(reportData);
+  } catch (error) {
+    console.error("Error generating report:", error);
+    return res.status(500).json({ message: "Internal server error" });
+  }
+};
 
 const getAllUserOrders = async (req, res) => {
     const userId = req.session.user.id;
@@ -63,6 +81,7 @@ module.exports = {
     createOrder,
     getAllOrders,
     updateOrderStatus,
-    getAllUserOrders
+    getAllUserOrders,
+getOrdersReport,
 
 };

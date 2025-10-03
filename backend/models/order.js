@@ -47,6 +47,11 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.DECIMAL(10, 2),
       allowNull: false,
     },
+    referenceNumber: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        unique: true,
+    },
     orderedBy: {
       type: DataTypes.INTEGER,
       allowNull: true,
