@@ -18,7 +18,7 @@ module.exports = {
       {
         firstName: 'Harvey',
         lastName: 'Hunat',
-        email: 'hhunat@mail.com',
+        email: 'harvey.hunat@gmail.com',
         username: 'hhunat',
         password: await bcrypt.hash('password123', salt),
         role: 'owner',
@@ -28,7 +28,7 @@ module.exports = {
       {
         firstName: 'Patrick',
         lastName: 'Balaga',
-        email: 'pbalaga@mail.com',
+        email: 'natekyouhei19@gmail.com',
         username: 'pbalaga',
         password: await bcrypt.hash('password123', salt),
         role: 'cashier',
@@ -38,7 +38,7 @@ module.exports = {
       {
         firstName: 'Clarence',
         lastName: 'Ticman',
-        email: 'cticman@mail.com',
+        email: 'ticmanclarence@gmail.com',
         username: 'cticman',
         password: await bcrypt.hash('password123', salt),
         role: 'customer',

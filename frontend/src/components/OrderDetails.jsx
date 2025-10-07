@@ -176,11 +176,17 @@ export default function OrderDetails({ orders }) {
             <div className="space-y-6 px-4 md:px-5 py-4">
               {order.orderItems.map((item) => (
                 <div key={item.id} className="flex items-start space-x-4">
-                  <img
-                    src={`${item.menuItem.image}`}
-                    alt={item.menuItem.name}
-                    className="w-16 h-16 rounded object-cover"
-                  />
+                   <img
+  src={item.menuItem.image || 
+       `https://placeholder.vn/placeholder/64x64?bg=cccccc&color=666666&text=No%20Image`}
+  alt={item.menuItem.name}
+  className="w-16 h-16 rounded object-cover"
+  onError={(e) => {
+    e.currentTarget.src = 
+      `https://placeholder.vn/placeholder/64x64?bg=cccccc&color=666666&text=No%20Image`;
+  }}
+/>
+
                   <div className="flex-1">
                     <p className="font-medium text-sm text-gray-800 dark:text-white">
                       {item.menuItem.name}

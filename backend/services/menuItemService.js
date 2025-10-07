@@ -2,7 +2,7 @@ const {MenuItem, Category, OrderItem, sequelize} = require('../models');
 const { fn, col, literal } = require('sequelize');
 const { uploadImage, deleteImage } = require('./minioService');
 const { getIO } = require("../utils/socket");
-
+const {Op} = require("sequelize")
 // Helper function to extract filename from image URL
 const extractFilenameFromUrl = (imageUrl) => {
     if (!imageUrl) return null;
@@ -81,8 +81,8 @@ const findAllMenuItems = async (page, status, search, pageSize) => {
 
         if (search && search.trim()) {
             whereConditions[Op.or] = [
-                { name: { [Op.iLike]: `%${search.trim()}%` } },
-                { description: { [Op.iLike]: `%${search.trim()}%` } }
+                { name: { [Op.like]: `%${search.trim()}%` } },
+                { description: { [Op.like]: `%${search.trim()}%` } }
             ];
         }
 

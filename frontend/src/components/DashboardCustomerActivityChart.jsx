@@ -87,7 +87,7 @@ export default function DashboardCustomerActivityChart() {
         </div>
 
         <div>
-          <select disabled className="bg-white dark:bg-neutral-800 border border-gray-300 dark:border-neutral-600 rounded px-2 py-1 text-sm">
+          <select disabled className="bg-white hidden dark:bg-neutral-800 border border-gray-300 dark:border-neutral-600 rounded px-2 py-1 text-sm">
             <option value="last-30-days">Last 30 days</option>
           </select>
         </div>
